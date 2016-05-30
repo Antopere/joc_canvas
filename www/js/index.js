@@ -20,7 +20,7 @@ $(document).on('deviceready', function() {
         if (canvas.height < window.innerHeight) { canvas.height = window.innerHeight; }
      */
     
-     /* 
+     /*
     	var info_pantalla = "amplada_pantalla : " + amplada_pantalla + " --- alçada_pantalla : " + alcada_pantalla +  " --- amplada_pantalla_CSS : " + amplada_pantalla_CSS + " --- alçada_pantalla_CSS : " + alcada_pantalla_CSS ;
     	alert(info_pantalla);
      */
@@ -79,12 +79,10 @@ $(document).on('deviceready', function() {
 		};
 		img.src = 'img/myImage.png'; // Determinar origen
 		
-		for (i = 0; i < 20; i++) {
-			
-			pausecomp(200);
-			ctx.clearRect(posicio_x_bola,posicio_y_bola,mida_x_bola,mida_y_bola );
-			ctx.drawImage(img,posicio_x_bola+5,posicio_y_bola,mida_x_bola,mida_y_bola);
-		}
+		window.darrera_posicio_x = posicio_x_bola ;
+		window.darrera_posicio_y = posicio_y_bola ;
+		
+		
            }
       }
       
@@ -124,23 +122,39 @@ $(document).on('deviceready', function() {
 	});
       
       // AQUESTA PART DETECTA EL TOUCH DE L'USUARI
-      document.addEventListener('touchstart', function(event) {
+      document.addEventListener('touchstart', function(e) {
       
-      	 alert("funciona");
-      	 
-	 for(var i = 0; i < event.touches.length; i++)
-	   {
-	        clickX[i] = event.touches[i].pageX;
-	        clickY[i] = event.touches[i].pageY;
-	        
-	        alert(" Dins BUCLE ( i = " + i + " ) : " +  clickX[i] + " -- " + clickY[i] );
-	        
-	    }
+      	var touchobj = e.changedTouches[0] ; // referència al primer punt tocat (pex: el primner dit)
+        startx = parseInt(touchobj.clientX) ; // quina és la posició x en referència al costat esquerra de la pantalla
+        starty = parseInt(touchobj.clientY) ; // la pos Y en ref. a la part superior
+        //statusdiv.innerHTML = 'Status: touchstart<br> ClientX: ' + startx + 'px' ;
+        //alert("Has tocat el punt -coordenades- ( " + startx + "px , " + starty + "px )");
+        e.preventDefault() ;
+      
+      	// dibuixem la esfera a x,y
+      
+      	    
+      	    // quina mida la bola ?
+      	    var amplada_pantalla_CSS = window.innerWidth ; 	// 360px
+	    var mida_x_bola = amplada_pantalla_CSS * ( 10 / 100 ) ; // 36 ;  10% de l'amplada de la pantalla -> amplada_pantalla_CSS 
+	    var mida_y_bola = mida_x_bola ;  // 36 ;
+      	    
+      	    //alert("L´anterior estava a  : (" + window.darrera_posicio_x + "," + window.darrera_posicio_x +  ") i ara estarà a : (" + startx + "," + starty + ")");
+      	    
+      	    //var canvas = document.getElementById('canvas');
+      	    //var ctx = canvas.getContext('2d');
+      	    var img = new Image();   // Crear nova imatge
+	    img.src = 'img/myImage.png'; // Determinar origen
+	    ctx.drawImage(img,startx,starty,mida_x_bola,mida_y_bola);
 	    
-	 	  
-	 //alert("Has tocat a ( " + clickX[0] + " , " + clickY[0] + " )" );
-      
-      
+	    // ctx.fillStyle="#FF0000"; // VERMELL 
+	    ctx.fillStyle="#FFFFFF";
+	    ctx.fillRect(window.darrera_posicio_x, window.darrera_posicio_y, mida_x_bola, mida_y_bola);
+
+	    // NOVA POSICIÓ DE LA BOLA -------
+	    window.darrera_posicio_x = startx ;
+	    window.darrera_posicio_y = starty ;
+      	    		
       
       
       }
